@@ -66,8 +66,8 @@ Make sure to substitute your own pushed image in the command below:
 ```shell
 helm install mcpserver oci://ghcr.io/cosmonic-labs/charts/http-trigger\
   --version 0.1.2\
-  --set components.name=mcpserver\
-  --set components.image=ghcr.io/cosmonic-labs/petstore-mcp-server:v0.2.0\
+  --set 'components[0].name=mcpserver'\
+  --set 'components[0].image=ghcr.io/cosmonic-labs/petstore-mcp-server:v0.4.0'\
   --set ingress.host="mcpserver.localhost.cosmonic.sh"\
   --set pathNote="/v1/mcp"
 ```
