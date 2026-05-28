@@ -8,25 +8,27 @@ with [wasmCloud][wasmcloud].
 
 # Dependencies
 
-- Download [`wash`][wash] v2.0.0-rc.8 or higher
+- Download [Wasm Shell (`wash`)][wash] v2.2.0 or higher
 
 [wash]: https://github.com/wasmcloud/wasmcloud
 
 ## Start the development loop
 
-Build the component:
+To start a new project based on this template, you can clone the repository or create a new project with `wash`:
 
 ```console
-npm install
+wash new https://github.com/cosmonic-labs/mcp-server-template-ts --name my-project
+```
+
+When `wash` prompts you to `Execute template setup command 'npm install'?`, type `y` to select **yes**. This will run `npm install` automatically upon project creation. (If you'd rather run `npm install` manually after navigating to the directory, you can do that, too.)
+
+In the project directory, start a development loop:
+
+```console
 npm run dev
 ```
 
-To debug your component, we recommend using [the official MCP model inspector][model-inspector],
-to run that you can run:
-
-```console
-npm run inspector
-```
+The `dev` script will automatically run [the official MCP model inspector][model-inspector] in your browser on [`http://localhost:6274/`](http://localhost:6274/).
 
 Using the model inspector you can connect to the local MCP server via HTTP, manipulate resources, run tools, and more.
 
@@ -46,68 +48,15 @@ npm run openapi2mcp path/to/openapi/spec.json
 
 ### Set up Cosmonic Control
 
-Once your MCP server is ready for primetime, ensure your [Cosmonic][cosmonic] cluster is running.
+Once your MCP server is ready for primetime, ensure your [Cosmonic Control][cosmonic] cluster is running.
 
 <details>
-<summary>Don't have a Comsonic cluster set up?</summary>
-
+<summary>Don't have a Cosmonic Control cluster set up?</summary>
 
 :::warning[Cosmonic Control required]
-You will need a Kubernetes cluster and an installation of Cosmonic Control to deploy the component. Sign-up for Cosmonic Control's [free trial](https://cosmonic.com/trial) and follow the [Get Started](/docs/install-cosmonic-control) instructions in the Cosmonic Control documentation. 
+It's free to get started with Cosmonic Control. You will need a Kubernetes cluster and an installation of Cosmonic Control to deploy the component. Follow the [Get Started](https://docs.cosmonic.com/install-cosmonic-control) instructions in the Cosmonic Control documentation. 
 :::
 
-Requirements:
-
-* [`kubectl`](https://kubernetes.io/releases/download/)
-* [Helm](https://helm.sh/docs) v3.8.0+
-
-#### Install local Kubernetes environment
-
-For the best local Kubernetes development experience, we recommend installing `kind` with the following `kind-config.yaml` configuration:
-
-```yaml
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-# One control plane node and three "workers."
-nodes:
-- role: control-plane
-  extraPortMappings:
-  - containerPort: 30950
-    hostPort: 80
-    protocol: TCP
-```
-
-This will help enable simple local ingress with Envoy.
-
-Start the cluster:
-
-```shell
-kind create cluster --config=kind-config.yaml
-```
-
-#### Install Cosmonic Control
-
-:::warning[License key required]
-You'll need a **trial license key** to follow these instructions. Sign up for Cosmonic Control's [free trial](/trial) to get a key.
-:::
-
-Deploy Cosmonic Control to Kubernetes with Helm:
-
-```shell
-helm install cosmonic-control oci://ghcr.io/cosmonic/cosmonic-control\
-  --version 0.3.0\
-  --namespace cosmonic-system\
-  --create-namespace\
-  --set envoy.service.type=NodePort\
-  --set envoy.service.httpNodePort=30950\
-  --set cosmonicLicenseKey="<insert license here>"
-```
-
-Deploy a HostGroup:
-
-```shell
-helm install hostgroup oci://ghcr.io/cosmonic/cosmonic-control-hostgroup --version 0.3.0 --namespace cosmonic-system
-```
 </details>
 
 ### Deploy the application with Helm CLI
@@ -115,10 +64,10 @@ helm install hostgroup oci://ghcr.io/cosmonic/cosmonic-control-hostgroup --versi
 Make sure to substitute your own pushed image in the command below:
 
 ```shell
-helm install cosmonic-control oci://ghcr.io/cosmonic-labs/charts/http-trigger\
+helm install mcpserver oci://ghcr.io/cosmonic-labs/charts/http-trigger\
   --version 0.1.2\
-  --set components.name=mcpserver\
-  --set components.image=ghcr.io/cosmonic-labs/petstore-mcp-server:v0.2.0\
+  --set 'components[0].name=mcpserver'\
+  --set 'components[0].image=ghcr.io/cosmonic-labs/petstore-mcp-server:v0.4.0'\
   --set ingress.host="mcpserver.localhost.cosmonic.sh"\
   --set pathNote="/v1/mcp"
 ```
@@ -131,5 +80,4 @@ You can use [the official MCP model inspector][model-inspector] to connect. Star
 npx @modelcontextprotocol/inspector
 ```
 
-[cosmonic]: https://cosmonic.com
-[cosmonic-free-license]: https://cosmonic.com/trial?utm_source=mcp-demo
+[cosmonic]: https://docs.cosmonic.com/
