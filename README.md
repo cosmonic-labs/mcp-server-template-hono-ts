@@ -8,7 +8,7 @@ with [wasmCloud][wasmcloud].
 
 # Dependencies
 
-- Download [Wasm Shell (`wash`)][wash] v2.0.0-rc.8 or higher
+- Download [Wasm Shell (`wash`)][wash] v2.2.0 or higher
 
 [wash]: https://github.com/wasmcloud/wasmcloud
 
@@ -48,7 +48,7 @@ npm run openapi2mcp path/to/openapi/spec.json
 
 ### Set up Cosmonic Control
 
-Once your MCP server is ready for primetime, ensure your [Cosmonic][cosmonic] cluster is running.
+Once your MCP server is ready for primetime, ensure your [Cosmonic Control][cosmonic] cluster is running.
 
 <details>
 <summary>Don't have a Cosmonic Control cluster set up?</summary>
@@ -64,7 +64,7 @@ It's free to get started with Cosmonic Control. You will need a Kubernetes clust
 Make sure to substitute your own pushed image in the command below:
 
 ```shell
-helm install cosmonic-control oci://ghcr.io/cosmonic-labs/charts/http-trigger\
+helm install mcpserver oci://ghcr.io/cosmonic-labs/charts/http-trigger\
   --version 0.1.2\
   --set components.name=mcpserver\
   --set components.image=ghcr.io/cosmonic-labs/petstore-mcp-server:v0.2.0\
@@ -80,5 +80,4 @@ You can use [the official MCP model inspector][model-inspector] to connect. Star
 npx @modelcontextprotocol/inspector
 ```
 
-[cosmonic]: https://cosmonic.com
-[cosmonic-free-license]: https://cosmonic.com/trial?utm_source=mcp-demo
+[cosmonic]: https://docs.cosmonic.com/
