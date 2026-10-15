@@ -46,6 +46,8 @@ npm run openapi2mcp path/to/openapi/spec.json
 
 **Note:** The path to the OpenAPI spec must be inside the repository for the `openapi2mcp` npm script to work.
 
+The HTTP client follows at most one redirect with the same scheme, host, and port as the request. It returns cross-origin redirects without contacting the destination, keeping credentials and request bodies on the original origin. APIs that redirect downloads to a CDN need an explicit integration for that destination.
+
 ### Set up Cosmonic Control
 
 Once your MCP server is ready for primetime, ensure your [Cosmonic Control][cosmonic] cluster is running.

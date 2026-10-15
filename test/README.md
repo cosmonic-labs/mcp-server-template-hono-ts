@@ -8,6 +8,12 @@ To run tests:
 npm run test
 ```
 
+Run HTTP client regression tests without building a Wasm component:
+
+```console
+npm run test:unit
+```
+
 To run all tests with debug logging enabled:
 
 ```console

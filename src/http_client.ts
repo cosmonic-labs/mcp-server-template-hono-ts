@@ -85,24 +85,38 @@ export class HTTPClient {
             throw new Error(`Not all path params were replaced in path: ${path}`);
         }
 
-        let res = await fetch(`${this.baseUrl}${path}?${new URLSearchParams(query).toString()}`, {
+        const requestUrl = new URL(
+            `${this.baseUrl}${path}?${new URLSearchParams(query).toString()}`,
+        );
+        const requestInit: RequestInit = {
             method: params.method,
             headers,
             body: JSON.stringify(params.body),
-        });
+            redirect: "manual",
+        };
+        const res = await fetch(requestUrl.href, requestInit);
 
-        // manually redirect since StarlingMonkey doesn't do it automatically yet
+        // Follow at most one same-origin redirect; every fetch must stay manual.
         // https://github.com/bytecodealliance/StarlingMonkey/issues/297
-        // TODO: remove once fixed in StarlingMonkey
         if (res.status === 301 || res.status === 302 || res.status === 307 || res.status === 308) {
-            let location = res.headers.get('Location');
-            if (!location) throw new Error('Location header not found');
+            const location = res.headers.get('Location');
+            if (!location) return res;
 
-            res = await fetch(location, {
-                method: params.method,
-                headers,
-                body: JSON.stringify(params.body),
-            });
+            let redirectUrl: URL;
+            try {
+                redirectUrl = new URL(location, requestUrl);
+            } catch {
+                return res;
+            }
+            if (
+                redirectUrl.origin !== requestUrl.origin ||
+                redirectUrl.username ||
+                redirectUrl.password
+            ) {
+                return res;
+            }
+
+            return fetch(redirectUrl.href, requestInit);
         }
 
         return res;
