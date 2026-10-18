@@ -3,6 +3,12 @@ name: Build Wasm component
 on: 
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing release tag to publish
+        required: true
+        type: string
 
 jobs:
   publish:
@@ -16,6 +22,8 @@ jobs:
     
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ inputs.release_tag || github.ref }}
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -28,12 +36,13 @@ jobs:
         run: npm ci
 
       - name: Build Wasm component
-        id: build
-        uses: wasmCloud/actions/wash-build@v0.2.0
+        run: |
+          npm run build
+          test -f dist/component.wasm
 
       - name: Publish Wasm component  
         uses: wasmcloud/actions/wash-oci-publish@v0.2.0
         with:
-          component_path: ${{ steps.build.outputs.component_path }}
+          component_path: dist/component.wasm
           attestation: false # add sbom attestation then enable
-          image_tags: ${{ github.ref_name }},latest
+          image_tags: ${{ inputs.release_tag || github.ref_name }},latest
