@@ -22,7 +22,10 @@ jobs:
           node-version: 22.x
 
       - name: Setup wash CLI
-        uses: wasmcloud/setup-wash-action@v1.0.0-rc.3
+        uses: wasmcloud/setup-wash-action@47756fa211cc82f392c57e39504f43ef46fc0b3e
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build Wasm component
         id: build
