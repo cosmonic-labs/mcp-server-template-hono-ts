@@ -1,5 +1,13 @@
 # mcp-server-template
 
+> **Archived.** For new projects, use the [TypeScript MCP server template for WASI p3](https://github.com/cosmonic-labs/mcp-server-template-ts-p3).
+>
+> The MCP and WebAssembly ecosystem is moving fast. We are building directly on the official MCP SDKs to keep up with protocol changes and reduce custom integration code. This repository is no longer maintained and is retained for reference.
+>
+> The new template uses the official TypeScript SDK and supports WASI p3 HTTP in both directions. For Rust, use [mcp-server-template-rs](https://github.com/cosmonic-labs/mcp-server-template-rs).
+
+## Historical documentation
+
 Template repository for creating a WebAssembly component [Model Context Protocol (MCP)][mcp] Server,
 with [wasmCloud][wasmcloud].
 
